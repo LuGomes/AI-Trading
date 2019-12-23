@@ -217,6 +217,8 @@ Here we've plotted a histogram of AAPL's log returns from 1980 to the present, a
 
 In general, the normal distribution can be a reasonable approximation for short-term returns and log returns for some applications. However, many analyses have shown that the data do not conform perfectly to a normal distribution, and often deviate significantly in the tails. The significance of this is that the normal distribution predicts fewer extreme events than are actually observed. The conversation about the best model for the distribution of returns has been going on for at least the past century. The best model will depend on exactly what your analysis seeks to achieve.
 
+Practice: `calculate_returns.ipynb`
+
 Normality and Long-Term Investments
 
 Based on historical data, it may be reasonable to consider short-term returns as approximately normally distributed for some purposes. However, even if short-term returns are normally distributed, long-term returns cannot be. If $r_1 = \frac{p_1 - p_0}{p_0}$ and $r_2 = \frac{p_2 - p_1}{p_1}$ are normally distributed, the sum of these, $r_1 + r_2$ would be normally distributed. But the two-period return is not the sum of the one-period returns. The two-period return equals $(1+r_1)(1+r_2)$ which is not normal and becomes noticeably less normal as the product grows over time.
@@ -317,4 +319,41 @@ def analyze_returns(net_returns):
 ```
 Low p-values tell us that if the true mean is 0, we would be unlikely to observe a mean as or more "extreme" than the mean we observed.
 
-Practice: `top_and_bottom_performing.ipynb`
+Practice: `dtype.ipynb` and `top_and_bottom_performing.ipynb`
+
+### Quant Workflow
+
+It all starts with a specific hypothesis. For instance _stocks that are discussed in the news are likely to go up_ is too vague and ergo does not lead to testable predictions. A improved hypothesis would be _stocks whose name or ticker appears on the landing page of the Wall Street Journal website will increase in price by 1% one day following its appearance_.
+
+Market research is key:
+    - news
+    - blogs
+    - books
+    - study known strategies
+    - academic papers
+    - meetups and conferences
+
+![](./images/workflow.png)
+
+Several types of trading strategies:
+
+1. Single asset like S&P500 index
+2. Pairwise - compares relative movements of related tickers (same sector for instance)
+3. Cross-sectional or equity statistical arbitrage or equity market neutral investing - compares several stocks to determine which to hold in long and short portfolios to benefit from transient phenomena
+
+![](./images/equity_neutral.png)
+
+4. Alternative-data driven (satellite imagery, social media, geolocation, consumer transaction data etc)
+
+Large hedge funds usually apply 3. and 4. given the capacity to invest lots of capital and different ideas to uncover signals (use hard to find and difficult to work with data).
+
+![](./images/strategy_layout.png)
+
+![](./images/alpha.png)
+
+A trading signal is a general term for any numerical signal that informs a trade. In practice, several alphas or signals are combined in a strategy - the idea of **model stacking / ensembling**.
+
+In finance risk refers to uncertainty or variability on returns.
+1. systematic risk - inherent to entire market (inflation, recession, interest rates, GDP)
+    - sector specific risk - inherent to sectors (regulation, legislation, material costs)
+2. idiosyncratic risk - inherent to specific stocks (labor strike, managerial changes)
