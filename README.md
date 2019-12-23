@@ -357,3 +357,19 @@ In finance risk refers to uncertainty or variability on returns.
 1. systematic risk - inherent to entire market (inflation, recession, interest rates, GDP)
     - sector specific risk - inherent to sectors (regulation, legislation, material costs)
 2. idiosyncratic risk - inherent to specific stocks (labor strike, managerial changes)
+
+### Outliers and Filtering
+
+Fat finger errors - human manual entry or computer bugs
+Data may be missing - stock suspension (regulatory reasons before big announcements or big imbalance in buy and sell orders)
+Mergers and other announcements may cause real extreme price fluctuations so unadjusted price data may have discontinuities (dividends issue dates, stock splits or other corporate actions) and these need to be factored in when processing data to get adjusted values.
+Thinly traded stocks can have large fluctuations when traded and predictability on these is low. These can be excluded from the trading universe to prevent lack of predictability. **Turnover** is the volume * price per share  and is low for infrequently traded tickers. **Stop-loss levels** are for exiting positions avoiding big losses.
+Filtering for outliers based on rules, like to catch price changes higher than a certain threshold but this can yield lots of false positives. If you also factor in volume changes accuracy of filter increases.
+Large amounts of data, missing values, dealing with false positives.
+**Lookahead bias** is when inaccuracy in filling missing data comes from using data that had not been known for the period under analysis. On backtesting missing values should be kept.
+If trading strategy is well designed, distribution of returns should be positively skewed. But if this distribution is extremely skewed, that raises suspicions. Q-Q plot compares two distributions.
+
+![](./images/QQ_1.png)
+![](./images/QQ_2.png)
+
+Robust trading signals by using rolling window that would prevent one-off spike up from generating a buy order. For portfolio level ww can average out movements and base actions on the accumulated signal to reduce the effect of outliers.
