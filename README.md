@@ -373,3 +373,82 @@ If trading strategy is well designed, distribution of returns should be positive
 ![](./images/QQ_2.png)
 
 Robust trading signals by using rolling window that would prevent one-off spike up from generating a buy order. For portfolio level ww can average out movements and base actions on the accumulated signal to reduce the effect of outliers.
+
+### Regression
+
+**Signal to noise ratio** tends to be low in finances which can easily lead to overfitting. This means that when used for prediction the model pays too much attention to aspects that are not useful in prediction. The relationships between variables in the model are also not stationary and hence we need to retrain the model every now and then with recent data.
+
+Some statistical tests used assume normal distribution of data points. If data doesn't actually follow normal distribution, the tests can lead to false positives.
+
+![](./images/distributions.png)
+
+**Probability density function** (PDF) defines a distribution.
+
+$$P(x|D) = p(x)$$
+
+Standard normal distribution:
+$$f(x)=\frac{1}{\sqrt{2\pi}}e^{-\frac{x^2}{2}}$$
+
+Normal distribution:
+$$f(x|\mu, \sigma^2)=\frac{1}{\sqrt{2\pi \sigma^2}}e^{\frac{-(x-\mu)^2}{2\sigma^2}}$$
+
+Note that for discrete variables, a probability mass function gives a probability for each value. However, for a probability density function, which describes a continuous variable, the probability is defined as the area under the curve within a range (between two points). For a single point, the area under the curve is actually zero, which is why probabilities for continuous variables are defined within a range instead of a single point.
+
+Note: The Standard Normal Distribution is centered on zero (hence μ = 0), and has a standard deviation of 1 (σ = 1).
+
+**Comparing Tests for Normality**
+
+There are some visual ways to check if a distribution is normally distributed or not. Recall that normal distributions are symmetric and do not have fat tails (a more formal term for “fat tails” is kurtosis”). Box-whisker plots helps us visually check if a distribution is symmetric or skewed. A histogram lets us check if a distribution is symmetric/skewed, and if it has fat tails. QQ plots help us compare any two distributions, so they can be used to compare distributions other than the normal distribution. If you plot the actual data’s distribution against a theoretical normal distribution, you can decide if the distributions are the same type if the QQ plot produces a fairly straight line.
+
+There are three hypothesis tests that can be used to decide if a data distribution is normal. These are the Shapiro-Wilk test, D’Agostino-Pearson, and the Kolmogorov-Smirnov test. Each of these produce p-value, and if the p-value is small enough, say 0.05 or less, we can say with a 95% confidence that the data is not normally distributed. Shapiro-Wilk tends to perform better in a broader set of cases compared to the D’Agostino-Pearson test. In part, this is because the D’Agostino-Pearson test is used to look for skewness and kurtosis that do not match a normal distribution, so there are some odd non-normal distributions for which it doesn’t detect non-normality, where the Sharpiro-Wilk would give the correct answer.
+
+The Kolmogorov Smirnov test can be used to compare distributions other than the normal distribution, so it’s similar to the QQ plot in its generality. To do a normality test, we would first rescale the data distribution (subtract the mean and divide by its standard deviation), then compare the rescaled data distribution with the standard normal distribution (which has a mean of zero and standard deviation of 1). In general, the Shapiro-WIlk test tends to be a better test than the Kolmogorov Smirnov test, but not in all cases.
+
+So in summary, if you want to be thorough, you can use all three tests (there are even more tests that we haven’t discussed here). If you only want to use one test, use the Shapiro-Wilk test. For a sanity check, visualize your data distribution with a histogram, box-whisker plot, and/or a QQ plot.
+
+![](./images/boxplot.png)
+
+If not symmetric, we say the data is skewed. Stock returns tend to be left skewed (extreme values towards negative values are more frequent).
+
+![](./images/skewed_dist.png)
+
+Practice: `test_normality.ipynb`
+
+**Heteroskedasticity**
+
+Stationary means mean, variance and covariance are stable over time.
+
+One of the assumptions of linear regression is that its input data are homoscedastic (variance is stationary). A visual way to check if the our data is homoscedastic is a scatter plot.
+
+If our data is heteroscedastic, a linear regression estimate of the coefficients may be less accurate (further from the actual value), and we may get a smaller p-value than should be expected, which means we may assume (incorrectly) that we have an accurate estimate of the regression coefficient, and assume that it’s statistically significant when it’s not.
+
+**Breusch-Pagan Test** is used to test for homescedasticity (constant variance over time). If small p value (< 0.05), we conclude the data is heteroscedastic.
+
+In finance, we transform our data to make it data normal and homoscedastic by taking the quotient of returns in different time periods and taking the log of this --> Log returns!
+
+The **Box-Cox transformation** transforms dataset to make it more normally distributed.
+
+$$T(x)=(x^{\lambda}-1)/{\lambda}$$
+
+If $\lambda$ is zero, then the transformation is the natural log.
+
+$$T(x)=ln(x)$$
+
+Note: A monotonic transformation changes values in a dataset but preserves the relative order.
+
+**Linear regression**
+- Ordinary least squares
+- Residuals (error terms) = actual - predicted. If the residuals follow a normal distribution with a mean of zero and constant standard deviation, then residuals can be considered random. On the other hand, if mean is not zero, we say the model has a bias in its prediction errors.
+- **Multiple regression** uses various independent variables to fit the data.
+- R-squared as a measure of model accuracy in fitting the data. A value of 1 means all the variation in the dependent variable can be explained by all the variation in the independent variables. The adjusted R-squared lets us find the minimum combination of independent variables that are most relevant to our model.
+- The **F-test** checks if our coefficients and intercept are non-zero and therefore meaningful. If p $\leq$ 0.05 then we conclude our parameters are not zero.
+
+**Breusch-Pagan Test for Heteroscedasticity**
+
+The Breusch-Pagan test is one of many tests for homoscedasticity/heteroscedasticity. It takes the residuals from a regression, and checks if they are dependent upon the independent variables that we fed into the regression. The test does this by performing a second regression of the residuals against the independent variables, and checking if the coefficients from that second regression are statistically significant (non-zero). If the coefficients of this second regression are significant, then the residuals depend upon the independent variables. If the residuals depend upon the independent variables, then it means that the variance of the data depends on the independent variables. In other words, the data is likely heteroscedastic. So if the p-value of the Breusch-Pagan test is ≤ 0.05, we can assume with a 95% confidence that the distribution is heteroscedastic (not homoscedastic).
+
+In Python, we can use the `statsmodels.stats.diagnostic.het_breuschpagan(resid, exog_het)` function to test for heteroscedasticity. We input the residuals from the regression of the dependent variable against the independent variables. We also input the independent variables that may affect the variance of the data. The function outputs a p-value.
+
+**Multivariate regression** is when we try to predict more than one dependent variable at a time.
+
+Practice: `regression.ipynb`
