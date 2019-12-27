@@ -522,3 +522,72 @@ These do not assume normal distribution of the data or linear relationships.
 **Recurrent Neural Networks**
 
 These are linear regressions working in series and parallel. They also output an intermediate output fed back into the ext prediction and hence the "recurrent" in the name (a way to use past information or "memory").
+
+**Volatility**
+
+- Measure of risk or uncertainty about future returns
+- Measure of the spread in log returns distribution or its standard deviation
+- Gives a sense of the range of values the log returns are likely to fall into
+- Some uses: measuring risk, defining position sizes, alpha factors, pricing options, trading volatility directly
+
+![](./images/volatility.png)
+
+$$\sigma=\sqrt{\frac{1}{n-1}\sum_{i=1}^n(\bar r-r_i)^2}$$
+
+- Depends on time frequency of the stock data used, weekly data will yield larger volatilities than daily, generally annualized is used to compare.
+
+- To annualize volatility (extrapolate different time frequency data to annual) we do $\sigma_{year}=\sqrt{252}\sigma_{day}$ or $\sigma_{year}=\sqrt{12}\sigma_{month}$. This is since we know that for two independent variables the variance of the sum is the sum of the variances and so $\sigma_{year}^2=252\sigma_{day}^2$.
+
+- Rolling window to check volatility variability
+
+```
+def calculate_simple_moving_average(rolling_window, close):
+    """
+    Compute the simple moving average.
+
+    Parameters
+    ----------
+    rolling_window: int
+        Rolling window length
+    close : DataFrame
+        Close prices for each ticker and date
+
+    Returns
+    -------
+    simple_moving_average : DataFrame
+        Simple moving average for each ticker and date
+    """
+
+    return close.rolling(window=rolling_window).mean()
+```
+
+- Exponentially weighted moving average, at each observation the weight decreases by the same percentage
+
+$$\sigma_t^2=(r_{t-1}^2+\lambda r_{t-2}^2+\lambda^2 r_{t-3}^2+...+\lambda^{n-1} r_{t-n}^2)/(1+\lambda+\lambda^2+...+\lambda^{n-1})$$
+
+```
+def estimate_volatility(prices, l):
+    """Create an exponential moving average model of the volatility of a stock
+    price, and return the most recent (last) volatility estimate.
+
+    Parameters
+    ----------
+    prices : pandas.Series
+        A series of adjusted closing prices for a stock.
+
+    l : float
+        The 'lambda' parameter of the exponential moving average model. Making
+        this value smaller will cause the model to weight older terms less
+        relative to more recent terms.
+
+    Returns
+    -------
+    last_vol : float
+        The last element of your exponential moving averge volatility model series.
+
+    """
+
+    lret = (np.log(prices) - np.log(prices.shift(1)))**2
+
+    return np.sqrt(lret.ewm(alpha=1-l).mean())[-1]
+```
