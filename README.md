@@ -452,3 +452,73 @@ In Python, we can use the `statsmodels.stats.diagnostic.het_breuschpagan(resid, 
 **Multivariate regression** is when we try to predict more than one dependent variable at a time.
 
 Practice: `regression.ipynb`
+
+**Time Series Modeling**
+
+Data collected over constant time intervals.
+
+We use stock log returns as opposed to prices since it is more stationary and hence more useful in predicting future values from past values.
+
+**Autoregressive model (AR)**
+
+Main principle is that recent past values give insight into predicting future values so we try to fit a linear model of the previous values.
+
+$$y_t=\alpha+B_1y_{t-1}+B_2y_{t-2}+...+\epsilon_t$$
+
+The `lag` is the number of previous values used (AR Lag 1 uses only 1 past day).
+
+**Moving Average (MA)**
+
+$$y_t=\mu+\epsilon_t+\theta_1\epsilon_{t-1}+\theta_2\epsilon_{t-2}+...$$
+
+The residuals represent information that cannot be captured by past data points.
+
+Autocorrelation is a measure of how much one value moves in relation to its previous values (correlation ranges from -1 to 1).
+
+The `lag` is the number of previous residuals used. We select it based on the autocorrelation plot.
+
+![](./images/autocorrelation.png)
+
+**Autoregressive Moving Average (ARMA)**
+
+Uses both AR and MA model capabilities. p and q are the lags for both components.
+
+**Autoregressive Integrated Moving Average (ARIMA)**
+
+Used in pairs trading. Uses time differencing to make the model more stationary or stable. In math therms, stock prices are I(1) whereas log returns are I(0). Use the _Augmented Dickey Fuller test_ to check if time series is stationary. If p > 0.5, we need to take the time difference.
+
+**Seasonal Adjustments using ARIMA (SARIMA)**
+Time series data tends to have seasonal patterns. For instance, natural gas prices may increase during winter months, when it’s used for heating homes. Similarly, it may also increase during peak summer months, when natural gas generators are used to produce the extra electricity that is used for air conditioning. Retail sales also has expected increases during the holiday shopping season, such as Black Friday in the US (November), and Singles’ Day in China (also in November).
+
+Stocks may potentially have seasonal patterns as well. One has to do with writing off losses in order to minimize taxes. Funds and individual investors have unrealized capital gains or losses when the stock price increases or decreases from the price at which they bought the stock. Those capital gains or losses become “realized capital gains” or “realized capital losses” when they sell the stock. At the end of the tax year (which may be December, but not necessarily), an investor may decide to sell their underperforming stocks in order to realize capital losses, which may potentially reduce their taxes. Then, at the start of the next tax year, they may buy back the same stocks in order to maintain their original portfolio. This is sometimes referred to as the “January effect.”
+
+Removing seasonal effects can help to make the resulting time series stationary, and therefore more useful when feeding into an autoregressive moving average model.
+
+To remove seasonality, we can take the difference between each data point and another data point one year prior. We’ll refer to this as the “seasonal difference”. For instance, if you have monthly data, take the difference between August 2018 and August 2017, and do the same for the rest of your data. It’s common to take the “first difference” either before or after taking the seasonal difference. If we took the “first difference” from the original time series, this would be taking August 2018 and subtracting July 2018. Next, to take the seasonal difference of the first difference, this would mean taking the difference between (August 2018 - July 2018) and (August 2017 - July 2017).
+
+You can check if the resulting time series is stationary, and if so, run this stationary series through an autoregressive moving average model.
+
+Practice: `autoregression_quiz.ipynb`
+
+**Kalman Filter**
+
+- Single state represents all past information
+- Handles noisy data
+- Predict and measurement update steps iteratively
+
+One way Kalman Filters are used in trading is for choosing the hedge ratio in pairs trading, a magic number that you can estimate from a model, such as a regression model, based on time series data of two stocks.
+
+Every day when you get another data point, you can run another regression and get an updated estimate for this number. So do you take the most recent number every time? Do you take a moving average? If so, how many days will you average together? Will you give each day the same weight when taking the average?
+
+All of these kinds of decisions are meant to smooth an estimate of a number that is based on noisy data. The Kalman Filter is designed to provide this estimate based on both past information and new observations. So instead of taking a moving average of this estimate, we can use a Kalman Filter.
+
+The Kalman Filter takes the time series of two stocks, and generate its “smoothed” estimate for this magic number at each new time period. Kalman Filters are often used in control systems for vehicles such as cars, planes, rockets, and robots. They’re similar to the application in pairs trading because they take noisy indirect measurements at each new time period in order to estimate state variables (location, direction, speed) of a system.
+
+**Particle Filters**
+
+Natural selection of better performing models, the particles are the models and its parameters are set randomly. Type of genetic algorithm.
+These do not assume normal distribution of the data or linear relationships.
+
+**Recurrent Neural Networks**
+
+These are linear regressions working in series and parallel. They also output an intermediate output fed back into the ext prediction and hence the "recurrent" in the name (a way to use past information or "memory").
