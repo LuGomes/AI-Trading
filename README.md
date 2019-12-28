@@ -591,3 +591,38 @@ def estimate_volatility(prices, l):
 
     return np.sqrt(lret.ewm(alpha=1-l).mean())[-1]
 ```
+
+Forecasting volatility tends to be easier than forecasting prices.
+**Autoregressive Conditionally Heteroscedastic (ARCH)**
+Autoregressive - present value is somehow related to recent past values.
+Heteroscedastic - the variable we are trying to model has varying magnitudes of variability at different times
+Conditionally - refers to a constraint we place on the model that limits the heteroscedastic property to be conditionally dependent on the previous values of the variable
+
+**GARCH** (Generalized) uses previous values of the variance on the model as well.
+
+![](./images/arch.png)
+
+What causes volatility anyway?
+New info reaching the market, people revise their opinions on the stock prices... But research does not support this conclusion. Volatility is to a large extent caused by trading itself. It is frequently correlated with trading volume.
+
+**Mean reversion strategies** are based on the idea that prices will return to their "running mean"" when they go way up or down are good in high volatility times. Momentum trading might do better at low volatility times.
+Volatility tends to be low when market is going up and high when the market is going down. There are volatility indices available for trading like the VIX for S&P500.
+
+**Using volatility to trade equity**
+
+![](./images/volatility_trading.png)
+- Mean-reverting strategy - Take a short position on an asset when it appreciates because you think it will depreciate again. Since the stock is less volatile, there is less uncertainty on its fair value so a large deviation is likely accompanied by revertion to normal.
+
+- Another observation is that low volatile stocks tend to perform better than high volatile stocks, contrary to intuition.
+
+- We can also use volatility to normalize momentum signals.
+
+- Position sizing, for instance less shares for more volatile and expensive stocks as below.
+
+![](./images/position_sizing.png)
+
+**Take-profit** and **stop-loss** are thresholds to automatically sell stocks and take garanteed profit or limit losses.
+
+We can also use rolling min and max to define breakout strategy as an alterantive to Bollinger bands (2 standard deviations up and down).
+
+![](./images/breakout.png)
