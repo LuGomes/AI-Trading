@@ -626,3 +626,92 @@ Volatility tends to be low when market is going up and high when the market is g
 We can also use rolling min and max to define breakout strategy as an alterantive to Bollinger bands (2 standard deviations up and down).
 
 ![](./images/breakout.png)
+
+**Mean reversion**
+
+- mean reverting timeseries is one that tends to move around a constant or mean value
+- if a mean reverting stock timeseries deviates too much below the mean, we assume it will revert back to the mean and then we may decide to buy the stock when it's low but it's more common to apply the concept to a pair of stocks that are economically linked
+- any divergence between these companies is assumed temporary and therefore we make trading decisions assuming the prices will settle back to the original relationship
+
+- **Drift and volatility** model: drift term (long term average) + volatility term (randomness) explain change in price
+
+$$dp_t=p_t\mu dt+p_t \sigma \epsilon \sqrt{dt}$$
+
+The term is the drift term. This means that if we compare the movements of two stocks, one that’s priced at \$ 2 per share, and another that’s priced at \$ 1000 per share, the series with the larger price per share is expected to drift (change) more in absolute dollar amounts compared to the other stock. The μ term is the expected return of the stock (think average return). Think of the expected return as the expected percent change over a period of time. We usually estimate the expected future return based on historical returns. So if a stock is expected to have a larger percent change per day compared to another, we’d also expect it to drift more (change more) compared to the other stock. This term also includes dt, which is the change in time (how much time has passed). If we watched a stock over a period of day versus over one month, we would expect it to drift more over a month, as more time has passed.
+
+Now let’s look at the volatility term. Think of this as the random, bouncy part of the stock movement. This term includes the stock price, the standard deviation of the stock σ, which is a function of time. This is why this model is a type of stochastic volatility model, because it allows for a non-constant volatility that varies over time. If a stock series has higher volatility, this will result in a larger overall movement in stock price. The $\epsilon$ is a white noise term, which means it’s a random number with a mean of zero and standard deviation of one. The white noise accounts for movements in the stock price that are not accounted for by the model. Finally, there’s the square root of the change in time.
+
+- **Stochastic volatility models** are fundamental building blocks for estimating the price of options (calls, puts, swaps) and also bonds. They attempt to represent the movement of a stock price when the volatility of its movements is random.
+
+- **Pairs Trading**
+
+![](./images/pairs_trading.png)
+
+Note that with pairs trading, we analyze the original stock price series, and do not convert them to returns or log returns. Let’s say stock A is \$ 2 per share, and stock B is \$ 3 per share. If we figured out that we can trade these pairs together, we may go long stock A and short stock B. But how much do we long stock A and short stock B? What if we long 3 shares of stock
+A and short 2 shares of stock B? This is nice, because $shares_A * price_A - shares_B * price_B = 0$. Doing pairs trading analysis with the stock price series instead of returns lets us decide how many shares of each stock to long or short, since our goal will be to have the same dollar amount in our long position as in our short position. We want movements in both stocks to cancel each other out.
+
+**Hedge ratio**
+ Can be defined as the price ratio (uses most recent price only) or through a regression between prices (uses series of recent prices).
+
+**Spread**
+The actual price minus the estimated price based on the second stock's price.
+
+- Time lag is good scenario to look out for in pairs trading.
+
+- To check the ecnonomic link we calculate the spread and check if it is stationary.
+
+- **Cointegration** is using two stocks timeseries to compute one that is stationary. For instance, $spread=y_t-(\alpha + \beta x_t)$ is I(0) and so the original series are cointegrated. $\beta$ is the hedge ratio of the coefficient of cointegration. Note that two stocks might be correlated but not necessarily cointegrated if one moves too much when compared to the other. Cointegration assumes movements are matched in magnitude. The **Engle-Granger test** checks for cointegration between two stocks, that is, it gets the hedge ration from regression and tests if the spread is stationary with Dickey-Fuller test (p > 0.5 means no cointegration).
+
+A way to think about whether two stocks’ time series are cointegrated is to see if some linear combination of their time series forms a stationary series.
+
+- **Augmented Dickey Fuller Test**
+To check if two series are cointegrated, we can use the Augmented Dickey Fuller (ADF) Test. First, let’s get some intuition to see what the ADF test is doing. It’s trying to determine if the linear combination of the two series, (which is also a time series) is stationary.
+
+A series is stationary when its mean and covariance are constant, and also when the autocorrelation between one time period and another only depends on the time duration between them, and not the specific point in time of each observation.
+
+If you could represent a series as an AR(1) model $y_t = \beta y_{t-1} + \epsilon_t$, let’s think about what happens if the β is greater than one. We can imagine putting in a value for $y_{t-1}$ to get an estimate for $y_t$; then for the next day, we’ll use that value as $y_{t-1}$ to put into the model and estimate the new $y_t$. We’d end up having a series that trends in one direction, so its mean is not constant, and therefore it is not stationary.
+
+Next, if we had a β equal to one, then $y_t = y_{t-1} + \epsilon_t$. We call this special case a random walk, and it means that the current price is equal to the previous price plus some white noise. Even though the mean of this series is constant, its covariance between one time period and another depends upon the point in time of the observations, so it is also not stationary.
+
+Finally, if we had a β of less than one, then we notice that $y_t$ depends upon less than 100% of the value of its previous value $y_{t-1}$, with some added random noise $\epsilon_t$. The series doesn’t trend in a particular direction. Its variance is also constant, and its covariance between any two data points doesn’t depend on the point in time of the data point. You can think of the series like a bouncing rubber ball that’s being tapped lightly by random raindrops. Without the rain, the bouncing ball would have smaller and smaller bounces, and eventually stop bouncing. With random raindrops falling on the ball, some raindrops would make the ball bounce more, others would make the ball bounce less. So overall, the ball maintains a constant bounce height over time.
+
+So conceptually, the Augmented Dickey Fuller Test is a hypothesis test for which the null hypothesis is that a series is a random walk (its \betaβ is equal to one), and so the null hypothesis assumes that the series is not stationary. The alternate hypothesis is that \betaβ is less than one, and therefore it’s a stationary series. So if the ADF produces a p-value of 0.05 or less, we can say with a 95% confidence level that the series is stationary.
+
+- **Clustering** stocks to find stocks to pairs trade that are not so obvious.
+
+- We have two thresholds, one signaling the spread is much wider than usual and the other signaling the spread is much narrower than usual. If spread widens, _short the spread_: short the asset that has increased, long the asset that has decreased (relatively). If spread narrows, _go long the spread_: short asset that has increased, long the asset that has decreased (relatively). **Buy low and sell high**. Buy when it's on sale and sell when it's overpriced. We calculate the Z score (metric for how many standard deviations the spread is from its historical average) $Z \ score = (x-mean)/std$.
+
+![](./images/spread.png)
+
+- Note that it’s also possible to extend pairs trading to more than two stocks. We can identify multiple pairs and include these pairs in the same portfolio. We can also analyze stocks that are in the same industry. If we grouped the stocks within the same industry into a virtual portfolio and calculated the return of that industry, this portfolio return would represent the general expected movement of all stocks within the industry. Then, for each individual stock series, we can calculate the spread between its return and the portfolio return. We can assume that stocks within the same industry may revert towards the industry average. So when the spread between the single stock and the industry changes significantly, we can use that as a signal to buy or sell.
+
+- Generalizing the 2-stock pairs trading method
+We can extend cointegration from two stocks to three stocks using a method called the Johansen test. First let’s see an example of how this works with two stocks.
+
+The Johansen test gives us coefficients that we can multiply to each of the two stock series, so that a linear combination produces a number, and we can use it the same way we used the spread in the prior pairs trading method.
+
+$$w_1 \times stock_1 + w_2 \times stock_2 = spread$$
+
+In other words, if the first stock series moves up significantly relative to the second stock, we can see this by an increase in the “spread” beyond its historical average. We will assume that the spread will revert down towards its historical average, so we’ll short the first stock that is relatively high, and long the second stock that is relatively low.
+
+So far, this looks pretty much like what you did before, except instead of computing a hedge ratio to multiply to one stock, the Johansen test gives you one coefficient to multiply to each of the two stock series.
+
+Extending to 3 stocks
+Now let’s extend this concept to three stocks. If we analyze three stock series with the Johansen, we can determine whether all three stocks together have a cointegrated relationship, and that a linear combination of all three form a stationary series. Note that for the purpose of cointegration trading we use the original price series, and do not convert them to log returns. The Johansen test also lets us decide whether only two series are needed to form a stationary series, but for now, let’s assume that we find a trio of stocks that are cointegrated.
+
+The Johansen gives us three coefficients, one for each stock series. We take the linear combination to get a spread.
+
+$$w_1 \times stock_1 + w_2 \times stock_2 + w_3 \times stock_3 = spread$$
+
+We get the historical average of the spread. Then we check if the spread deviates significantly from that average. For example, let’s say the spread increases significantly. So we check whether each of the three individual series moved up or down significantly to result in the change in spread. We short the series that are relatively high, and long the series that are relatively low. To determine how much to long or short, we again use the weights that are given by the Johansen test (w_1, w_2, w_3).
+
+For example, let’s say the spread has gotten larger. Let’s also pretend that $w_1$ is 0.5, $w_2$ is 0.3, and $w_3$ is -0.1. Notice that the weights do not need to sum to 1. We’ll long or short the number of shares for each stock in these proportions. So for instance, if we traded 5 shares of stock 1, we’ll trade 3 shares of stock 2, and one share of stock 3.
+
+If we notice that stock 1 is higher than normal, stock
+2 is lower than normal, and stock 3 is lower than normal, then let’s see whether we long or short a stock, and by how much.
+
+Since stock 1 is higher than usual (relative to the others), we short 5 shares of stock 1 because we expect it should revert by decreasing relative to the others.
+
+Since stock 2 is lower than normal, we long it by 3 shares, because we expect it to revert by increasing relative to the others.
+
+Since stock 3 is lower than normal, so we also long it by 1 share but notice that $w_3$ is a negative number (-0.1). Whenever we see a negative weight, it means we change a buy to a sell, or change a sell to a buy. So we long a -1 shares, which is actually shorting 1 share.
