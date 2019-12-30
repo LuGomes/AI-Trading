@@ -715,3 +715,45 @@ Since stock 1 is higher than usual (relative to the others), we short 5 shares o
 Since stock 2 is lower than normal, we long it by 3 shares, because we expect it to revert by increasing relative to the others.
 
 Since stock 3 is lower than normal, so we also long it by 1 share but notice that $w_3$ is a negative number (-0.1). Whenever we see a negative weight, it means we change a buy to a sell, or change a sell to a buy. So we long a -1 shares, which is actually shorting 1 share.
+
+#### Stocks, indices and funds
+
+- Equity = assets - liabilities
+
+**Indices**
+
+- Represent aggregated values of a group of stocks, virtual potfolios and not actual fund that people invest in, may be specific to stock exchange, country, or sector
+    - S&P: Standard and Poor’s 500 Index (USA)
+    - Dow: Dow Jones Industrial Average (USA)
+    - IBOVESPA: Ibovespa Brasil Sao Paulo Stock Exchange Index (Brazil)
+    - MERVAL: Buenos Aires Stock Exchange Merval Index (Argentina)
+    - NIKKEI: Nikkei 225 Index (Japan) HANG SENG: Hang Seng Composite Index (Hong Kong)
+    - FTSE 100: Financial Times Stock Exchange 100 Index (UK)
+    - EURO STOXX: EURO STOXX 50 (Europe)
+- Professional investment managers may use indices as *benchmarks* against which they can evaluate their own fund’s performance.
+- Some indices track only companies with similar market cap (large cap, mid cap, small cap)
+- Some indices track either *growth* or *value* types of stocks. **Growth stocks** have high growth in sales or earnings and therefore potential for future growth whereas **Value stocks** tend to be mature in sales or revenue and therefore fewer expectations for future growth.
+    - How to define if a company is growth or value:
+        - Price to earnings ratio: the stock price divided by the company’s earnings per share over the past four quarters.
+        - Price to sales ratio: the the stock price divided by the sales per share over the past four quarters.
+        - Price to book ratio: the stock price divided by the book value per share. The book value is the company’s accounting value, which is assets minus liabilities.
+
+    - Growth stocks tend to have high price to earnings, price to sales, and price to book ratios.
+    - Value stocks tend to have lower price to earnings, price to sales, and price to book ratios.
+- Indices are created as subsets of other indices. One way of creating subsets include categorizing by market cap, and then value vs. growth. This is how Standard and Poor’s breaks down some of its indices:
+    - S&P 500 Growth & S&P 500 Value
+    - S&P MidCap 400 Growth & S&P MidCap 400 Value
+    - S&P SmallCap 600 Growth & S&P SmallCap 600 Value
+- **Market cap weighting**: Add up all the prices, weighted by the market cap. S&P 500 and IBovespa are some examples.
+- If one is added or deleted, the index needs to be rebalanced (weights need to be recalculated). Rebalcing also happens periodically or on day of a major event (merger, acquisition, bankrupcy or privatization).
+- To update the index value from one day to the next, we multiply the previous day's index value by the market cap change.
+    - A market cap weighted index has only two stocks, A and B. On day 1, the index has a value of 100. Stock A has a market cap of \$ 100 million, while stock B has a market cap of \$ 200 million. One month later, stock A has a market cap of \$ 105 million, while stock B has a market cap of \$ 210 million. What is the value of the index? Answer: $100*315/300=105$
+- **Free float**: number of shares that are liquid and tradable on the stock exchange. These may be considered a better measure when calculating market cap because only free float shares can be bought or sold, which means only the trade of free float shares affects the market movement of the stock. The Hang Seng is a capped free float adjusted market cap weighted index.
+- **Capped index**: an index that tries to keep large companies from dominating the index is called a capped index, because it sets a maximum weight that can be assigned to a single company. In the case of the Hang Seng Index, the largest allowed weight assigned to any single company is 15%.
+
+**Funds**
+
+- Professionally managed porfolio of investor money.
+- Benefit from **diversification** and improve risk versus return (Sharpe ratio), the investor would get the same return but for a lower risk.
+- **Actively** Managed Fund: seeks to outperform its benchmark (such as an index). **Alpha funds**. Seeks to generate returns above market.
+- **Passively** Managed Fund: seeks to track its benchmark (such as an index). It's oftern referred to as index funds. **Beta funds**. Seeks to match market returns.
