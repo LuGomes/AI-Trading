@@ -803,3 +803,101 @@ ETF sponsors can charge more competitive (lower) fees in part because their tran
     - If an ETF share price is lower than its NAV, we say it’s trading at a discount.
     - The difference between the ETF share price and its NAV can be called its “basis”.
     - Re-align ETF Share Price with Arbitrage - An Authorized Participant (AP) looks for when an ETF is trading at a premium or discount to its NAV. The AP then buys low and sells high in order to make a profit on the difference. This trade also reduces the price discrepancy and helps to keep ETF share prices in line with their NAV. For example, if the ETF is trading at a premium the AP will enter a create process with the ETF Sponsor. This means that the AP buys the underlying stocks (at a relatively low price) and exchanges them with the ETF Sponsor for ETF shares (which are priced at a premium). Then the AP sells those ETF shares on the stock exchange. The purchase of underlying stocks tends to push the stock prices up. The creation of more ETF shares tends to push the ETF share price downward.
+
+#### Portfolio Risk and Return
+
+- **Idiosyncratic risk or Specific risk** - risks specific to individual companies
+- Risk cannot lowered indefinetely with more and more diversification because companies are subjected to **systematic or market risks** like inflation, recession or change in interest rates or GDP.
+- **Portfolio mean**
+$$E(r_P)=\sum_1^n p(i)r(i)=x_AE(r_A)+x_bE(r_B)$$
+- **Portfolio Variance**
+$$\sigma_P^2=\sum_i p(i)[r_P-E(r_p)]^2=x_A^2\sigma_A^2+x_B^2\sigma_B^2+2x_Ax_BCov(r_A,r_B)$$
+$$Cov(r_A,r_B)=\rho x_Ax_B \sigma_A \sigma_B$$
+where $\rho$ is the correlation coefficient and ranges from -1 to 1.
+If correlation is -1, then the portfolio would have null variance if $x_a=\sigma_B/(\sigma_a+\sigma_B)$ but in practice systematic risk makes it impossible to perfect anti-correlation.
+
+We just noted that when the correlation is less than one (ρ<1), the portfolio standard deviation is less than the weighted average of the individual standard deviations. The nice benefit of putting two stocks into a portfolio is that, as long as they’re not perfectly correlated, we’ll end up with a portfolio whose risk is less than the the weighted sum of the individual risks. A key benefit of portfolio diversification is that it helps us to reduce risk!
+
+**The Covariance Matrix**
+
+We can write the portfolio variance in vectorial form as:
+$$\sigma_P=x^TPx$$
+where P is the covariance matrix
+![](./images/covariance_matrix.png)
+
+We know that
+$$Cov(r_A,r_b)=E[(r_A-\bar r_A)(r_B-\bar r_B)]=\frac{1}{n-1}\sum_{i=1}^n (r_{Ai}-\bar r_{A})(r_{Bi}-\bar r_{B})$$
+
+If each vector has a mean of 0 the covariance matrix can be calculated as
+$$1/(n-1)r_A^Tr_B=1/(n-1)r^Tr$$
+where r has each vector observations as its columns
+
+**The Efficient Frontier**
+
+![](./images/portfolio_metrics.png)
+
+The efficient frontier for a given set of stocks gives us the set of portfolios that achieve the highest return for each level of risk. The efficient frontier also contains the set of portfolios that achieve the lowest level of risk for each level of return. We refer to these portfolios along the efficient frontier as market portfolios. As portfolio managers, we would be interested in finding the weights for each stock that create these market portfolios on the efficient frontier.
+
+The minimum variance portfolio is a single portfolio in the efficient frontier that has the lowest risk.
+
+
+![](./images/efficient_frontier.png)
+
+**Capital Market Line**
+
+A risk-free asset provides a guaranteed rate of return with no uncertainty.
+We can do better than the efficient frontier by adding a risk-free asset into the portfolio. The capital market line gives us potential portfolios with better returns at the same level of risk than the efficient frontier. It is tangent to the efficient frontier passing through the risk-free asset as below.
+
+![](./images/capital_market_line.png)
+![](./images/sharpe_ratio.png)
+
+The **Sharpe ratio** is the slope of the capital market return or the ratio of reward to volatility.
+$$(\bar r_M-r_f)/\sigma_M$$
+
+The numerator of the Sharpe ratio is called the excess return, differential return as well as the risk premium. It’s called “excess return” because this is the return in excess of the risk-free rate. It’s also called the “risk premium”, because this represents the premium that investors should be rewarded with for taking on risk.
+The denominator is the volatility of the excess return.
+
+The Sharpe Ratio allows us to compare stocks of different returns because the Sharpe ratio adjusts the returns by their level of risk.
+To convert the Sharpe ratio from daily to annual we multiply by $\sqrt 252$.
+Also if you borrow (or short) the risk-free asset, even bigger returns can be achieved.
+![](./images/sharpe_ratio_2.png)
+
+Treasury securities are IOUs from a government. They are government debt instruments used to finance government spending as an alternative to taxation. In the case of stable governments, they are considered relatively risk-free. In the U.S., Treasury bills mature in 1 year or less, Treasury notes mature in 2 to 10 years, and Treasury bonds mature in 20 to 30 years.
+
+**Other Risk Measures**
+There are other ways to measure risk besides standard deviation. Two other common risk measures are semi-deviation and Value-at-Risk (written as VaR).
+
+**Semi-Deviation**
+
+If you were given two stocks, one that continued to increase by 10% every day, and one that decreased by 10% every day, would you intuitively think that one stock was more risky than the other? Standard deviation measures of risk would give these two stocks the same level of risk, but you might think that investors are more worried about down-side risk (when stocks decline), rather than upside risk. The motivation for semi-deviation measure of risk is to measure downside risk specifically, rather than any kind of volatility.
+
+Semi-deviation is calculated in a similar way as standard deviation, except it only includes observations that are less than the mean.
+
+$$SemiDeviation = \sum_{t=1}^{n}(\mu - r_i)^2 \times I_{r_i<\mu}$$
+​
+where $I_{r_i < \mu}$ equals 1 when $r_i < \mu$ and 0 otherwise.
+
+**Value-at-Risk** is defined as the maximum dollar amount expected to be lost over a given time horizon at a predefined confidence level. For example, if the 95% one month VaR is \$ 1 million, there is 95% confidence that the portfolio will not lose more than \$ 1 million next month. Another way to describe the VaR is that there is a 5% chance of losing $1 million or more next month. The methods for calculating VaR are beyond the scope of this lesson, but if you ever become a risk manager, or ever work with a risk manager, you’ll probably see Value-at-Risk quite a bit.
+
+For a visual representation of VaR, we can look at a data distribution that represents the rate of return of a stock. If we color in the area in the left tail that represents 5% of the distribution, the rate of return represented by that point on the horizontal axis is the rate of return that may occur in the 5% worst case scenario. To convert that to a VaR, we multiply that rate of return by the amount of capital that is exposed to risk. For a portfolio, it would be the amount of dollars invested in that particular stock.
+
+**Capital Asset Pricing Model**
+
+The CAPM is a model that describes the relationship between systematic risk and expected return for assets. The CAPM assumes that the excess return of a stock is determined by the market return and the stock’s relationship with the market’s movement. It is the foundation of the more advanced multi-factor models used by portfolio managers for portfolio construction.
+
+Ok, let’s quickly recap: the systematic risk, or market risk, is undiversifiable risk that’s inherent to the entire market. In contrast, the idiosyncratic risk is the asset-specific risk.
+
+Ok, let’s take a look at CAPM. For a stock, the return of stock ii equals the return of the risk free asset plus β times the difference between the market return and the risk free return. β equals the covariance of stock ii and the market divided by the variance of the market.
+
+$$r_i-r_f=\beta(r_m-r_f)$$
+
+β describes which direction and by how much a stock or portfolio moves relative to the market. For example, if a stock has a β of 1, this indicates that if the market’s excess return is 5%, the stock’s excess return would also be 5%. If a stock has a β of 1.1, this indicates that if the market’s excess return is 5%, the stock’s excess return would be 1.1 × 5%, or 5.5%.
+
+Generally speaking, investors need to be compensated in two ways: time value of money and risk. The time value of money is represented by the risk free return. This is the compensation to investors for putting down investments over a period of time. $\beta (r_m - r_f)$ represents the risk exposure to the market. It is the additional excess return the investor would require for taking on the given market exposure, β. $r_m- r_f$ is the risk premium, and β reflects the exposure of an asset to the overall market risk.
+
+**Security Market Line**
+
+The Security Market Line is the graphical representation of CAPM and it represents the relation between the risk and return of stocks. Please note that it is different from the capital market line. The y-axis is expected returns but the x-axis is beta. (You may recall that for the capital market line that we learned earlier, the x-axis was standard deviation of a portfolio.) As beta increases, the level of risk increases. Hence, the investors demand higher returns to compensate risk.
+
+The Security Market Line is commonly used to evaluate if a stock should be included in a portfolio. At time points when the stock is above the security market line, it is considered “undervalued” because the stock offers a greater return against its systematic risk. In contrast, when the stock is below the line, it is considered overvalued because the expected return does not overcome the inherent risk.
+The SML is also used to compare similar securities with approximately similar returns or similar risks.
