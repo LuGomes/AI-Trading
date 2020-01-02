@@ -901,3 +901,76 @@ The Security Market Line is the graphical representation of CAPM and it represen
 
 The Security Market Line is commonly used to evaluate if a stock should be included in a portfolio. At time points when the stock is above the security market line, it is considered “undervalued” because the stock offers a greater return against its systematic risk. In contrast, when the stock is below the line, it is considered overvalued because the expected return does not overcome the inherent risk.
 The SML is also used to compare similar securities with approximately similar returns or similar risks.
+
+#### Portfolio Optimization
+
+If the first-order partial derivatives are 0 at the point (a,b):
+
+- If $det(H)(a,b)>0$ and $f_{xx}(a,b)>0$ then (a,b) is a local minimum of f.
+- If $det(H)(a,b)>0$ and $f_{xx}(a,b)<0$ then (a,b) is a local maximum of f.
+- If $det(H)(a,b)<0$ then (a,b) is a saddle point.
+- If $det(H)(a,b)=0$ then (a,b) then the second derivative test is inconclusive, and the point (a, b)(a,b) could be any of a minimum, maximum or saddle point.
+
+where H is the Hessian matrix or the matrix of the second-order partial derivatives.
+
+Convex optimization problems (objective function is convex, inequality constraints are convex and equality constraints are of the form $f(x)=a^Tx+b$) only have one minimum.
+
+For a portfolio with two stocks only the minimization of the portfolio variance has an analytical solution:
+$$x_A=\frac{\sigma_B^2-\sigma_A \sigma_B \rho_{r_Ar_B}}{\sigma_A^2+ \sigma_B^2-2\sigma_A \sigma_B \rho_{r_Ar_B}}$$
+
+So far, we've discussed one way to formulate a portfolio optimization problem. We learned to set the portfolio variance as the objective function, while imposing the constraint that the portfolio weights should sum to 1. However, in practice you may frame the problem a little differently. Let's talk about some of the different ways to set up a portfolio optimization problem.
+
+There are several common constraints that show up in these problems. Earlier, we were allowing our portfolio weights to be negative or positive, as long as they summed to 1. If a weight turned out to be negative, we would consider the absolute value of that number to be the size of the short position to take on that asset. If your strategy does not allow you to take short positions, your portfolio weights will all need to be positive numbers. In order to enforce this in the optimization problem, you would add the constraint that every $x_i$ in the x vector is positive.
+
+You may choose to impose constraints that would limit your portfolio allocations in individual sectors, such as technology or energy. You could do this by limiting the sum of weights for assets in each sector.
+
+If your optimization objective seeks to minimize portfolio variance, you might also incorporate into the problem a goal for the total portfolio return. You can do this by adding a constraint on the portfolio return.
+$$x^T \mu \ge r_min$$
+
+We can also flip the problem around by maximizing returns instead of minimizing variance. Instead of minimizing variance, it often makes sense to impose a constraint on the variance in order to manage risk. Then you could maximize mean returns, which is equivalent to minimizing the negative mean returns. This makes sense when your employer has told you, “I want the best return possible, but you must limit your losses to p percent!”
+$$objective: minimize: -x^T\mu$$
+$$constraint: x^TPx \le p$$
+
+You could also create an objective function that both maximizes returns and minimizes variance, and controls the tradeoff between the two goals with a parameter, bb. In this case, you have two terms in your objective function, one representing the portfolio mean, and one representing the portfolio variance, and the variance term is multiplied by bb.
+
+How does one determine the parameter bb? Well, it’s very dependent on the individual and the situation, and depends on the level of risk aversion appropriate. It basically represents how much percent return you are willing to give up for each unit of variance you take on.
+
+$$objective: minimize: -x^T\mu+bx^TPx, b \ tradeoff \ parameter$$
+
+Minimizing Distance to a Set of Target Weights
+
+One way to formulate an optimization problem is to use the L2 norm and minimize the difference between your vector of portfolio weights and a set of predefined target portfolio weights x*. The goal would be to get the weights as close as possible to the set of target weights while respecting a set of constraints. As an example, these target weights might be values thought to be proportional to future returns for each asset, in other words, an alpha vector.
+
+$$objective: minimize: ||x-x*||_2, x* \ set \ of \ target \ portfolio \ weights$$
+
+What if you want to minimize portfolio variance, but have the portfolio track an index at the same time? In this case, you would want terms in your objective function representing both portfolio variance and the relationship between your portfolio weights and the index weights, q. There are a few ways to set this up, but one intuitive way is to simply minimize the difference between your portfolio weights and the weights on the assets in the index, and minimize portfolio variance at the same time. The tradeoff between these goals would be determined by a parameter, λ.
+
+$$objective: minimize: x^TPx+\lambda ||x-q||_2, q \ set \ of \ index \ weights, \lambda \ tradeoff \ parameter$$
+
+What is cvxpy? cvxpy is a Python package for solving convex optimization problems. It allows you to express the problem in a human-readable way, calls a solver, and unpacks the results.
+
+How to use cvxpy
+Import: First, you need to import the package: `import cvxpy as cvx`
+
+Steps: Optimization problems involve finding the values of a variable that minimize an objective function under a set of constraints on the range of possible values the variable can take. So we need to use cvxpy to declare the variable, objective function and constraints, and then solve the problem.
+
+Optimization variable: Use `cvx.Variable()` to declare an optimization variable. For portfolio optimization, this will be x, the vector of weights on the assets. Use the argument to declare the size of the variable; e.g. `x = cvx.Variable(2)` declares that x is a vector of length 2. In general, variables can be scalars, vectors, or matrices.
+
+Objective function: Use `cvx.Minimize()` to declare the objective function. For example, if the objective function is `(x - y)^2`, you would declare it to be: `objective = cvx.Minimize((x - y)**2)`.
+
+Constraints: You must specify the problem constraints with a list of expressions. For example, if the constraints are x + y = 1 and x - y ≥ 1 you would create the list: constraints = `[x + y == 1, x - y >= 1]`. Equality and inequality constraints are elementwise, whether they involve scalars, vectors, or matrices. For example, together the constraints 0 <= x and x <= 1 mean that every entry of \mathbf{x}x is between 0 and 1. You cannot construct inequalities with < and >. Strict inequalities don’t make sense in a real world setting. Also, you cannot chain constraints together, e.g., 0 <= x <= 1 or x == y == 2.
+
+Quadratic form: Use `cvx.quad_form()` to create a quadratic form. For example, if you want to minimize portfolio variance, and you have a covariance matrix P, the quantity `cvx.quad_form(x, P)` represents the quadratic form x^TPx, the portfolio variance.
+
+Norm: Use `cvx.norm()` to create a norm term. For example, to minimize the distance between x and another vector, create a term in the objective function `cvx.norm(x-b, 2)`. The second argument specifies the type of norm; for an L2-norm, use the argument 2.
+
+Constants: Constants are the quantities in objective or constraint expressions that are not Variables. You can use your numeric library of choice to construct matrix and vector constants. For instance, if x is a cvxpy Variable in the expression A*x + b, A and b could be Numpy ndarrays, Numpy matrices, or SciPy sparse matrices. A and b could even be different types.
+
+Optimization problem: The core step in using cvxpy to solve an optimization problem is to specify the problem. Remember that an optimization problem involves minimizing an objective function, under some constraints, so to specify the problem, you need both of these. Use `cvx.Problem()` to declare the optimization problem. For example, `problem = cvx.Problem(objective, constraints)`, where objective and constraints are quantities you've defined earlier. Problems are immutable. This means that you cannot modify a problem’s objective or constraints after you have created it. If you find yourself wanting to add a constraint to an existing problem, you should instead create a new problem.
+
+Solve: Use `problem.solve()` to run the optimization solver.
+
+Status: Use `problem.status` to access the status of the problem and check whether it has been determined to be unfeasible or unbounded.
+
+Results: Use `problem.value` to access the optimal value of the objective function. Use e.g. `x.value` to access the optimal value of the optimization variable.
+
