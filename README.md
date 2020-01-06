@@ -974,3 +974,4 @@ Status: Use `problem.status` to access the status of the problem and check wheth
 
 Results: Use `problem.value` to access the optimal value of the objective function. Use e.g. `x.value` to access the optimal value of the optimization variable.
 
+Rebalancing to bring weights back to targets. **Target asset allocation** = some goal you have for the weights on the assets in your portfolio. Can be done at a predetermined temporal frequency or when weights drift by a certain percentage from the targets or even a combination of both. Costs: transaction costs, taxes, time and labor costs.
