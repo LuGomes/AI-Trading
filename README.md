@@ -975,3 +975,58 @@ Status: Use `problem.status` to access the status of the problem and check wheth
 Results: Use `problem.value` to access the optimal value of the objective function. Use e.g. `x.value` to access the optimal value of the optimization variable.
 
 Rebalancing to bring weights back to targets. **Target asset allocation** = some goal you have for the weights on the assets in your portfolio. Can be done at a predetermined temporal frequency or when weights drift by a certain percentage from the targets or even a combination of both. Costs: transaction costs, taxes, time and labor costs.
+
+#### Factors
+
+**Alpha factors** - drivers of mean returns
+**Risk factors** - drivers of volatility
+
+Factors can be based on: momentum, fundamental information, signals from social media...
+
+**Factor** is a list of numerical values, one for each stock, potentially predictive of an aspect of the performance of these stocks in the future.
+Basis of quantitative portfolio management. Signals where to place bets and how much to place.
+
+Example of a factor: a momentum one
+Hypothesis: one-year return indicates momentum for the next few days. So the factor is the one-year return of each stock in the universe.
+
+We use the factor value to determine portfolio weights for the stocks as opposed to predicting future prices of each stock.
+
+![](./images/alpha_factor.png)
+
+**Standardized factor**
+
+- Sum of values equals zero - we de-mean the factors
+- Sum of absolute values equals one - we rescale the factors by didiving them by the sum of the absolute values
+
+![](./images/standardizing_factors.png)
+![](./images/standardizing_factors_example.png)
+
+The de-meaning aims to make the portfolio **dollar neutral**, i.e. dollars short = dollars long to test the predictive power of the factor and at the same time excluding the influence of the overall market movement (**market neutral**).
+
+A portfolio's notional is the number we can multiply the stock weights by in order to get a dollar value for each stock's position. For a long-only portfolio, we can think of this as the amount of cash that a fund has available to invest in the portfolio. Whether the positions are long or short, we can multiply the stock weight to the notional to turn this into a dollar amount for that stock's position.
+
+We also call the dollar neutral portfolios **zero-investment portfolios** as there would be no net cash invested. But in real life, there are transaction costs etc but let's not worry about that for the theoretical portfolio.
+
+- How to convert a portfolio to be dollar neutral?
+
+We shift our weights while keeping the relative difference, or we de-mean it.
+
+![](./images/demeaning.png)
+
+- Why do we rescale the factor?
+
+To make the portfolio leverage ratio equal to 1.
+
+Leverage is the act of borrowing in order to invest. Borrowing cash in order to go long on more positions may magnify gains but also losses. We can borrow cash or short stocks.
+
+Using leverage to double initial investment, a 10% increase in stock price would mean a 20% increase over initial capital.
+
+The **leverage ratio** is the sum of the magnitudes of all positions, divided by the notional. The leverage ratio gives a sense of how much risk a portfolio is taking, because taking more positions magnifies both gains and losses. To standardize a factor, we divide by the sum of the magnitudes (sum of the absolute value of the positions), so that this rescaled vector's sum of magnitudes is equal to one. This makes different factors more comparable, because it's as if you're comparing different portfolios but each with the same amount of money placed on their positions.
+
+![](./images/leverage_ratio.png)
+
+After standardization, the sum of the demeaned weights is always zero, the sum of the rescaled weights is always zero, the sum of the absolute value of the rescaled weights is always one, the sum of the rescaled short positions is always -0.5.
+
+**Zipline Pipeline**
+
+Zipline is an open-source algorithmic trading simulator and it's used to filter stock data according to factors. A pipeline is a placeholder for a series of data operations used to filter and rank data according to some factor(s).
