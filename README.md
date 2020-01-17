@@ -1030,3 +1030,53 @@ After standardization, the sum of the demeaned weights is always zero, the sum o
 **Zipline Pipeline**
 
 Zipline is an open-source algorithmic trading simulator and it's used to filter stock data according to factors. A pipeline is a placeholder for a series of data operations used to filter and rank data according to some factor(s).
+
+### Factor Models
+
+- Statistical model to describe variability among observed correlated variables in terms of potentially smaller number of unobserved variables (factors).
+
+- The so-called **latent variables** explain correlations in the set of variables of interest.
+
+- In finance, we want to model the asset returns. Factor models attempt to model the return of a large group of stocks that are somewhat correlated with a smaller set of variables which explain their common variability. A linear combination of the _factors returns_ plus an error term model the observed returns. Each stock has a set of "exposures" to the different factors and an error (unexplained term).
+
+![](./images/factor_model.png)
+
+The influence of our factor returns cannot be measured directly, that's what we call unobserved or latent random variables. And so, we need other steps to produce the timeseries before we run the multiple regression!
+
+How to measure these factors?
+- Example: we hypothesize that stock returns is related to its size of the company (market cap), smaller sized companies could produce larger returns.
+
+To create a single timeseries of factor return, we create a theoretical portfolio apllying out hypothesis (longs small caps and shorts large caps) to construct it and the factors will be its daily returns.
+
+The terminology used to describe factor models varies widely. Here are some common phrases used to refer to the components of the model.
+
+Factor returns may be:
+
+- macro-economic variables
+- returns on pre-specified portfolios,
+- returns on zero-investment strategies (long and short positions of equal value) giving maximum exposure to fundamental or macro-economic factors,
+- returns on benchmark portfolios representing asset classes,
+- or something else.
+
+The b_ij coefficients may be called:
+
+- factor exposures,
+- factor sensitivities,
+- factor loadings,
+- factor betas,
+- asset exposures
+- style
+- or something else.
+
+The s_i term may be called:
+
+- idiosyncratic return,
+- security-specific return,
+- non-factor return,
+- residual return,
+- selection return
+- or something else.
+
+- Factor model assumptions: 1) the residual of returns is not correlated to the factor returns and 2) the residuals for different assets are not correlated. Then only exposures to the factors give rise to correlations among assets returns. The residual for a specific asset is said to be specific or "idiosyncratic" to that asset.
+
+![](./images/factor_model_assumptions.png)
