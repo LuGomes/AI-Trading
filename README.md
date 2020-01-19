@@ -877,7 +877,7 @@ $$SemiDeviation = \sum_{t=1}^{n}(\mu - r_i)^2 \times I_{r_i<\mu}$$
 ​
 where $I_{r_i < \mu}$ equals 1 when $r_i < \mu$ and 0 otherwise.
 
-**Value-at-Risk** is defined as the maximum dollar amount expected to be lost over a given time horizon at a predefined confidence level. For example, if the 95% one month VaR is \$ 1 million, there is 95% confidence that the portfolio will not lose more than \$ 1 million next month. Another way to describe the VaR is that there is a 5% chance of losing $1 million or more next month. The methods for calculating VaR are beyond the scope of this lesson, but if you ever become a risk manager, or ever work with a risk manager, you’ll probably see Value-at-Risk quite a bit.
+**Value-at-Risk** is defined as the maximum dollar amount expected to be lost over a given time horizon at a predefined confidence level. For example, if the 95% one month VaR is \$ 1 million, there is 95% confidence that the portfolio will not lose more than \$ 1 million next month. Another way to describe the VaR is that there is a 5% chance of losing \$ 1 million or more next month. The methods for calculating VaR are beyond the scope of this lesson, but if you ever become a risk manager, or ever work with a risk manager, you’ll probably see Value-at-Risk quite a bit.
 
 For a visual representation of VaR, we can look at a data distribution that represents the rate of return of a stock. If we color in the area in the left tail that represents 5% of the distribution, the rate of return represented by that point on the horizontal axis is the rate of return that may occur in the 5% worst case scenario. To convert that to a VaR, we multiply that rate of return by the amount of capital that is exposed to risk. For a portfolio, it would be the amount of dollars invested in that particular stock.
 
@@ -1080,3 +1080,100 @@ The s_i term may be called:
 - Factor model assumptions: 1) the residual of returns is not correlated to the factor returns and 2) the residuals for different assets are not correlated. Then only exposures to the factors give rise to correlations among assets returns. The residual for a specific asset is said to be specific or "idiosyncratic" to that asset.
 
 ![](./images/factor_model_assumptions.png)
+
+- Covariance matrix using a factor model
+
+If we demean the returns, this will be $E[rr^T]$. We know that $r=Bf+s$.
+
+![](./images/covariance_factor_model.png)
+
+How are factor models used?
+
+The final exposure will be the multiplication of the factor exposure to the weight of the asset. If we have risk and alpha factors in our model and want to limit the exposure to risk factors we can pose constraints in the final exposure (B*x). We don't constrain the alpha factors which are drivers of mean returns. So we can drop them from B and consider B the risk factor loading matrix only! And so we only include the risk factors in F. All other variance is accounted for in S. The alpha factors no longer included in B are added to the objective function still.
+
+![](./images/constrain_risk_factors.png)
+
+![](./images/no_constraint_alpha_factors.png)
+
+**Risk Factors v. Alpha Factors**
+
+In general, risk factors are significant contributors to the variance of asset returns, and less predictive of the mean of returns. Risk factors are identified to control risk. One way to control an asset's exposure to a risk factor is to hold an equal amount long as short. For instance, a dollar neutral portfolio with equal amounts long and short is controlling for risks that the overall market may move up or down.
+
+In general, factors that are significant in describing the mean of asset returns can be candidates for alpha factors. Alpha factors are used to give some indication of whether each stock in the portfolio may have positive expected returns or negative expected returns. For example, a former alpha factor was the market capitalization of a stock. Small cap stocks tend to have higher future returns compared to large cap stocks. We can use alpha factors to predict future price movements after we neutralized the prices using a risk model.
+
+**Characteristics of risk factors and alpha factors**
+
+Usually, we'd choose 20 to 60 risk factors that describe overall stock variance as much as possible. So risk factors as a whole account for more of the overall movement of stocks compared to alpha factors.
+
+On the other hand, alpha factors contribute to smaller movements of stocks, which is okay, because we seek to identify these alpha factors because they give some indication of the direction of expected returns, even if they're small compared to risk factors.
+
+An important reason why it's important to identify risk factors and then neutralize a portfolio's exposure to risk factors is that if we didn't, the asset movements due to risk factors would overwhelm the movements that are due to the alpha factors.
+
+**Risk factors are well-known**
+
+Risk factors are well-known by the investment community, so investors will track those factors when optimizing their portfolios. This also means that it's unlikely that any one investor can gain a competitive advantage (higher than normal returns) using risk factors. Investors trade away the mispricing that existed before the public was unaware of the risk factor. This means that at the end of the day, risk factors are not likely to be used to enhance the porfolio's returns.
+
+**Alpha factors are proprietary**
+
+Alpha factors are less well-known by the investment community, because they're generated by in-house research to help the fund generate higher than normal returns. So alpha factors are said to be drivers of the mean of returns because they're used to help push a portfolio's overall returns higher than what would be expected from a passive buy and hold strategy.
+
+**Alpha factors becoming risk factors**
+
+An alpha factor that is generated by internal research in a fund can help that fund seek a competitive advantage in the market. If the proprietary factor isn't yet discovered by the rest of the investment community, most others won't act on that signal when making investment and trading decisions.
+
+Alpha factors usually lose their effectiveness over time. One possible reason is that as other funds also discover the factor, and make investment decisions based on its signal, then the above-average gains or arbitrage opportunities get diffused as they're shared by a growing number of market participants. Eventually, if a factor becomes very well known and most investors are acting on its signal, then the factor can be considered more of a risk factor.
+
+Among quants, you may hear the joke that "your alpha factor is my risk factor," since it's up to each fund to decide whether to use a factor to control risk or to drive returns.
+
+**Efficient market hypothesis**: Assets are fairly prices based on publicly available information.
+
+**Momentum or reversal factors**
+
+Momentum factors suggest a current trend will continue. A reversal factor suggest a trend will change and go on the other direction.
+
+![](./images/reversal_factor.png)
+
+**Price-volume**
+
+Available for many stocks and refreshed regularly. Fundamental information for instance is less frequently updated. Keep in mind that higher data frequency leads to higher trading and portfolio turnover, more frequent rebalancing needed. The higher info advantage has to therefore more than offset the transaction costs.
+
+_Overnight returns_ compares close price of on day to open price of the next day.
+
+![](./images/moments_distribution.png)
+
+A positive skew means that there are more extreme values on the positive side of the distribution. Stock returns distributions tend to exhibit fatter tails than normal distrubtions.
+
+_Bar data_ is how quants refer to data that’s represented as tables. Each row is referred to as a “bar”.
+
+**Volume factors**
+
+Can track if trading volume of a stock is higher than normal and use that to determine if recent price movements are significant or not.
+So if low volume (ex. holiday) then price movements may not be as significat. On the other hand, if high volume then price movement may be more significant.
+
+**Short interest** is the quantity of stocks' shares that are held short. A trader shorts a stock by borrowing from a seller with the hope of buying it later when it's cheaper. If the price increases, the short seller will realize **mark to market** losses (unrealized losses tracked in accounting). If price keeps increasing, the short seller may want to close out the position by buying at market price and selling after (**short squeeze**). Short squeeze adds upward momentum due to the additional buys triggered. This can then be considered a buy signal. So an alpha factor could be high price momentum conditioned on high short interest.
+
+**Fundamentals** derive from financial statements (e.g. price to earning ratios) for instance. With price volume factors, these make up the most used factors by quants. Updated every 3 months usually. Higher capacity (more assets on trades driven by them) due to lower turnover. Example: market cap factor - overweighting small cap stocks.
+
+Fundamental ratios:
+- Earnings/price
+- Book/price > 0 if company's net asset value is positive
+- Cash flow - more volatile, more objective
+- EBITDA (earnings before interest, tax, depreciation and amortization)
+
+**Event-driven factors** are not scheduled (e.g. natural disasters, government changes, M&A, spin-offs, new product announcement, index add/delete...).
+
+Index add of a stock can drive the buy of that stock. Because funds and ETFs track indexes. So it can be a buy signal.
+
+Event-driven strategies are often combined with fundamental and sentiment factors to interpret the significance of the event. Let's take an example of an event: earnings announcement. **Pre-event** or before the scheduled event, we can analyse if we expect the event to exceed or fall short of expectations so we can buy or sell. For instance, if we think that the news or analysts sentiment are too positive, then the actual earning will be lower than expected and so we should short or sell the stock before the announcement. **Post-event** we can predict if the actual earning was better or worse than expected, or the earnings **surprise**. If the surprise was positive (actual above expected), that could indicate a buy signal. We could also use the price movements following the announcement to gage the investors sentiment towards the stock.
+
+One strategy that does not work so well anymore is the so-called **post-earnings announcement drift** - the tendency for returns to drift in the direction of an earnings surprise for even two months following an earnings announcement.
+
+**Analyst ratings** can have significant influence on market movement and so can be thought of as a sentiment factor. Rating scales differ. Look for rating changes. Herd mentality (safer to be wrong when everyone else is also wrong). Focus on "star" analysts. Upgrades - downgrades indicate overall positive or negative sentiment.
+
+Sentiment analysis on news and social media is also important. NLP supplements fundamental research. For instance, it can be used to analyse annual 10-K forms filled to the SEC. These forms details a company's view for its business, past financial outcomes and risks for the future. Satellite images can help track retail store customers by analyzing parking lots or estimate crude oil storage by tracking floating roof tank storage.
+
+Some companies that are aggregating alternate data
+- https://www.buildfax.com/
+- http://edi.om/
+- https://www.thinknum.com/
+- https://orbitalinsight.com/
