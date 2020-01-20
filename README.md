@@ -1177,3 +1177,61 @@ Some companies that are aggregating alternate data
 - http://edi.om/
 - https://www.thinknum.com/
 - https://orbitalinsight.com/
+
+#### Risk Factor Models
+
+- Aim to measure, control and possibly neutralize portfolio exposure to sources of risk.
+- We want model asset variance and covariance in terms of the risk factors. For that we need to know: variance and covariance of the risk factors, factor exposures and specific variance of assets.
+
+![](./images/risk_factor_models.png)
+
+**Covariance Matrix of Assets**
+
+The covariance matrix of assets can be huge (for 9000 stocks, there would be 81 million values or 40.5 unique values since it's symmetric) to maintain. The **curse of dimensionality**. The process of calculating the covariance matrix of assets is called _historical measure of risk_. The alternate approach is the risk factor model!
+
+![](./images/covariance_matrix_assets.png)
+
+![](./images/factor_model_return.png)
+
+Now we want to describe the portfolio's returns?
+
+The portfolio factor exposure to a specific factor k is the weighted average of the exposures from its individual stocks. The portfolio specific return is the weighted sum of the specific return of its assets.
+
+![](./images/portfolio_exposure.png)
+
+We want the contribution of factors to be bigger and the specific return to be smaller.
+
+**Factor Model of Portfolio Variance**
+
+![](./images/portfolio_variance_model.png)
+
+**Variance of one stock in terms of factors**
+
+![](./images/stock_variance.png)
+
+**Covariance of 2 stocks**
+
+The covariance of two stocks can be written as the sum of the covariances of the factors. In this example we have two factors, so we have four covariance terms. If we were using three factors to describe the asset returns, there would be three times three or nine covariance terms.
+
+![](./images/covariance_2_stocks.png)
+
+**Covariance Matrix of Assets in terms of Factors**
+
+If we write the stock variances and pairwise covariances in terms of the risk factors, we can plug them into the covariance matrix of assets.
+
+![](./images/covariance_matrix_factors.png)
+
+**Portfolio Variance in Non-Matrix and Matrix Notation**
+
+The formula that we calculated for portfolio variance is equivalent to the matrix notation formula that we saw a few videos ago.
+
+![](./images/portfolio_risk_model_1.png)
+
+![](./images/portfolio_risk_model_2.png)
+
+![](./images/portfolio_risk_model_3.png)
+
+Types of Risk Models
+- Time Series Risk Models: Capital Asset Pricing Model and Fama French 3 Factor Model
+- Cross Sectional Risk Models
+- PCA Risk Models
