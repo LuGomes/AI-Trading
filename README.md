@@ -1,7 +1,7 @@
 # AI in Trading NanoDegree (AITND)
 This repository contains code for Udacity's [AI in Trading NanoDegree](https://www.udacity.com/course/nd880).
 
-# Quantitative Trading
+## Term I - Quantitative Trading
 
 **Quant**
     - Those who build computational models of the world, that could be about financial markets
@@ -1235,3 +1235,55 @@ Types of Risk Models
 - Time Series Risk Models: Capital Asset Pricing Model and Fama French 3 Factor Model
 - Cross Sectional Risk Models
 - PCA Risk Models
+
+TO BE FINISHED
+
+
+## Term II - AI Algorithms in Trading
+
+### Natural Language Processing
+
+- **Structured Languages** are easy for computers to parse and understand since they are described by a set of rules or **grammar**, throws syntax error if grammar is not respected.
+    - Here is a grammar, specified in a simple notation known as Backus-Naur Form or BNF:
+```
+_S_ → 0 _S_ 0
+_S_ → 1 _S_ 1
+_S_ → 00
+_S_ → 11
+```
+
+- Most part of human discourse is **unstructured text**.
+
+```"""Count words."""
+import re
+
+def count_words(text):
+    """Count how many times each unique word occurs in text."""
+    counts = dict()  # dictionary of { <word>: <count> } pairs to return
+
+    text = text.lower()
+    words = re.sub(r'[^a-zA-Z0-9_]', ' ', text).split()
+    for word in words:
+        if not word in counts:
+            counts[word] = 1
+        else:
+            counts[word] += 1
+    return counts
+```
+
+- NLP pipeline consists of three steps:
+    - Text Processing
+    - Feature Extraction
+    - Modeling
+
+**Text Processing
+- Aims to convert raw text into clean and normalized text (no punctuation and all lowercase letters)
+- `nltk.tokenize` to tokenize text
+- BeautifulSoup to scrape html and xml files
+- Stop word removal - words that do not add meaning to sentences like the, as, me...
+- Part-of-speech tagging to label verb, noun, etc. Used in sentence parsing.
+- Named entity - typically noun phrases referring to object, person or place. `nltk.ne_chunk` to recognize named entities in a phrase.
+- Stemming: reducing a word to its stem or root form (e.g. branching -> branch). `nltk.stem` for stemmers. Does not need a dictionary. Can result in incomplete words, with no meaning.
+- Lemmatization maps words to root but using dictionaries (e.g. was, were, is -> be). `nltk.stem` for lemmetizers too. Always outputs meaningful words unlike stemming.
+
+![](./images/text_processing.png)
