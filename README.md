@@ -1276,7 +1276,7 @@ def count_words(text):
     - Feature Extraction
     - Modeling
 
-**Text Processing
+**Text Processing**
 - Aims to convert raw text into clean and normalized text (no punctuation and all lowercase letters)
 - `nltk.tokenize` to tokenize text
 - BeautifulSoup to scrape html and xml files
@@ -1287,3 +1287,41 @@ def count_words(text):
 - Lemmatization maps words to root but using dictionaries (e.g. was, were, is -> be). `nltk.stem` for lemmetizers too. Always outputs meaningful words unlike stemming.
 
 ![](./images/text_processing.png)
+
+**Feature Extraction**
+
+### Bag od words
+
+- Treats each document as an unordered collection (set) or a bag of words. - **Document** is the unit of text to analyse (e.g. a teweet). We can turn each document into a vector of numbers, representing frequency of occurence of words in the document.
+- A **corpus** is a set of documents and gives the context for the vectors to be calculated.
+- For two documents, we can then compute the dot product of its vectors and the greater the result, the more similar the documents are. A better measure is the cosine similarity which divides by the dimensions of the vectors. If the vectors are in an n-dimensional plance, this would be the cosine between them - range is [-1,1].
+
+![](./images/bag_of_words.png)
+
+![](./images/bag_of_words_2.png)
+
+- Limitation: treats each word as being equally important. We can compensate by using the document frequency (sum of frequency across documents for each word) and then divide the term frequencies by the document frequency for each term. The measure will then be proportional to the frequency of occurence of the words across documents and inversely proportional to the number of documents it appears in highlighting words that are more unique to documents. The TF-IDF transform is the product of two weights: a term frequency and an inverse document frequency. It aims to measure relevance of words in documents.
+
+![](./images/bag_of_words_3.png)
+![](./images/tf_idf_definition.png)
+
+- One-hot encoding to assign number to each word. Bad if the number of words is too large.
+
+![](./images/one_hot_encoding.png)
+
+- **Word embeddings** to control the size of the word vectorial representation. If the words are similar in meaning their vectors should be similar. If two pairs of words have a similar difference in meeaning (e.g. woman, men vs king, queen) they should be somewhat equally separated.
+
+- **Word2Vec** is one type of word embedding. The core idea is to predict a given word by its neighboors or vice-versa. The two flavors are: continuous bag of words (CBoW) where the neighboors are given to predict the central word and continuous skip-gram where the the central one used to predict the neighboors. For the latter, we convert it to a vector and feed into a neural network to predict the few neighborring words.
+    - Robust, distributed representation
+    - Vector size independent of vocabulary
+    - Train once, store in lookup table
+    - Deep learning ready
+
+- **GloVe** or Global Vectors for Word Representation is another type of word embedding. We compute probabilities for each pair as appearing in the same context (one in the vicinity of the other). Then for each word two vectors are initialized (one when its acting as the context and the other when its acting as the context). We want the dot product to be equal to the co-occurence probability and that's how we optimize the word vectors. The resulting vectors should capture similarities between individual words.
+
+![](./images/glove.png)
+![](./images/co_occurence_prob.png)
+
+- The more dimensions the word embedding the more information it captures and so they are hard to visualize. t-SNE (t-distributed stochaistic neighbor embedding) aims to reduce dimensionality that tries to maintain relative distance between objects as in the original space. It also words with images clustering related images together.
+
+![](./images/nlp_architecture.png)
