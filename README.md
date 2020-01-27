@@ -1325,3 +1325,17 @@ def count_words(text):
 - The more dimensions the word embedding the more information it captures and so they are hard to visualize. t-SNE (t-distributed stochaistic neighbor embedding) aims to reduce dimensionality that tries to maintain relative distance between objects as in the original space. It also words with images clustering related images together.
 
 ![](./images/nlp_architecture.png)
+
+**Financial statements**
+
+- Securities and Exchange Comissions (SEC)
+- Companies file reports to the SEC like 10Ks (annual) and 10Qs (quarter)
+- 10K:
+    - Business overview - risks and legal procedings
+    - Business and finance - market conditions, projections
+    - Governance - executive board members and compensations
+    - Full financial report - spendings and earnings
+- EDGAR (electronic data gathering analysis retrieval) created by SEC - website to access financial statements
+- 10K inmportant sections: Risk factors (1A), Management's discussion and analysis of financial condition and result of operations (7) and quantitative and qualitative disclosures about market risk (7A). We use the plain text format to scrape data from because not all reports are available in html format.
+- Regexes to scrape data from 10K's
+    - `\n` for new line, `\t` for tab, if `r''` the backslashes are not interpreted as special characters (raw strings!), `re.compile(regex)` to transforme pattern into regex object, `regex.finditer(text)` to find matches (returns an iterator). Metacharacters are used to give special instructions (e.g. . ^ * ? $) and so, to search for them, we need to escape them first. `\d` for digits, `\D` for non digits, `\s` for whitespace characters (newlines, tabs, whitespaces...), `\S` for non whitespace characters, `\w` for alphanumeric characters, `\W` for non alphanumeric characters
