@@ -1370,3 +1370,19 @@ def count_words(text):
 - Some potential problems: works well for perfectly formatted HTML, not all 10-Ks are in HTML or XML format, older ones are in plain text
 - Parsers:
 BeautifulSoup uses a parser to transform files into a tree of Python objects that can be easily searched. In BeautifulSoup, the parser is a piece of software whose primary job is to build a data structure in the form of a hierarchical tree that gives a structural representation of the HTML or XML file. In other words, the parser divides these complex files into simpler parts while keeping track of how these parts are related to each other. BeautifulSoup supports a number of parsers, but throughout these lessons we will only be using the lxml parser. The lxml parser can be used to parse both HTML and XML files and has the advantage of being very fast. If you're working with perfectly formatted HTML or XML files (i.e. files that don't contain any missing information or mistakes) then, in the majority of cases, your choice of parser shouldn't really matter. However, if the files you are working with have missing information or mistakes, then your choice of parser will matter because each parser has different rules for dealing with missing information or mistakes. Consequently, in these cases, different parsers will create different parse trees for the same document.
+- Some code:
+
+```
+from bs4 import BeautifulSoup
+page_content = BeautifulSoup(file,lxml) #object with tags as keys
+page_content.head.title
+page_content.h1.get_text()
+page_content.body.h1['id'] #get attribute of h1 tag
+page_content.prettify()
+page_content.find_all(['h2','p'], id='SOME_ID')
+page_content.find_all(class_='SOME_CLASS')
+page_content.find_all(re.compile(r'i'))
+page_content.head.contents #lists all child tags
+page_content.head.children #returns iterator for all child tags
+page_content.find_all(recursive=False) #only looks for direct children
+```
