@@ -1338,4 +1338,35 @@ def count_words(text):
 - EDGAR (electronic data gathering analysis retrieval) created by SEC - website to access financial statements
 - 10K inmportant sections: Risk factors (1A), Management's discussion and analysis of financial condition and result of operations (7) and quantitative and qualitative disclosures about market risk (7A). We use the plain text format to scrape data from because not all reports are available in html format.
 - Regexes to scrape data from 10K's
-    - `\n` for new line, `\t` for tab, if `r''` the backslashes are not interpreted as special characters (raw strings!), `re.compile(regex)` to transforme pattern into regex object, `regex.finditer(text)` to find matches (returns an iterator). Metacharacters are used to give special instructions (e.g. . ^ * ? $) and so, to search for them, we need to escape them first. `\d` for digits, `\D` for non digits, `\s` for whitespace characters (newlines, tabs, whitespaces...), `\S` for non whitespace characters, `\w` for alphanumeric characters, `\W` for non alphanumeric characters
+
+**Some regex**
+- `\n` for new line
+- `\t` for tab
+- if `r''` the backslashes are not interpreted as special characters but raw strings!
+- `re.compile(regex)` to transforme pattern into regex object
+- `regex.finditer(text)` to find matches (returns an iterator)
+- Metacharacters are used to give special instructions (e.g. . ^ * ? $) and so, to search for them, we need to escape them first:
+    - `\d` for digits, `\D` for non digits,
+    - `\s` for whitespace characters (newlines, tabs, whitespaces...), `\S` for non whitespace characters,
+    - `\w` for alphanumeric characters, `\W` for non alphanumeric characters
+    - `\b` for word boundary, `\B` for non word bounrday (e.g. `r'\bclass` will match words starting with class)
+    - `.` for any character except newline
+    - `^` for charaters at the beginning of a sentence
+    - `$` for characters at the end of a sentence
+    - `\d{3}` to match 3 digits
+    - character set to specify possibilites for a single match (e.g. `[- ]` will match - OR whitespace, `[6-9]` specifies a range)
+    - `[^6-9]` caret negates the set, as opposed to specifying beginning of the sentence (when outside [])
+    - qualifier `{m,n}` means there must be at least m repetitions, and at most n repetitions of the previous regular expression
+    - `+` metacharacter matches 1 or more repetitions of the preceding regular expression
+    - `?` to signal optional regex (e.g. `Mt\.?` will match Mt or Mt.)
+    - `*` matches 0 or more repetitions of the previous regex (e.g. `ab*` will match a or ab or abbb...)
+    - group is definined with parentheses (e.g. `(Mt|Mnt)` or `(ab){3}` will match `ababab`)
+- `regex = re.compile(r'&')` `regex.sub(r'and', sample_text)` to replace & for and
+- `re.sub(r'\1 \3', sample_text)` will replace matches with groups 1 and 3
+- flags: `re.compile(regex, re.IGNORECASE)`
+
+**BeatifulSoup**
+- python package to pull data out of HTML and XML data
+- Some potential problems: works well for perfectly formatted HTML, not all 10-Ks are in HTML or XML format, older ones are in plain text
+- Parsers:
+BeautifulSoup uses a parser to transform files into a tree of Python objects that can be easily searched. In BeautifulSoup, the parser is a piece of software whose primary job is to build a data structure in the form of a hierarchical tree that gives a structural representation of the HTML or XML file. In other words, the parser divides these complex files into simpler parts while keeping track of how these parts are related to each other. BeautifulSoup supports a number of parsers, but throughout these lessons we will only be using the lxml parser. The lxml parser can be used to parse both HTML and XML files and has the advantage of being very fast. If you're working with perfectly formatted HTML or XML files (i.e. files that don't contain any missing information or mistakes) then, in the majority of cases, your choice of parser shouldn't really matter. However, if the files you are working with have missing information or mistakes, then your choice of parser will matter because each parser has different rules for dealing with missing information or mistakes. Consequently, in these cases, different parsers will create different parse trees for the same document.
