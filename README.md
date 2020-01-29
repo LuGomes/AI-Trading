@@ -1386,3 +1386,37 @@ page_content.head.contents #lists all child tags
 page_content.head.children #returns iterator for all child tags
 page_content.find_all(recursive=False) #only looks for direct children
 ```
+
+### Basic NLP Analysis
+
+Three metrics commonly used for financial analysis:
+- Readability: long sentences and long words are tougher to read
+- Sentiments
+- Similarity
+
+**Readibility**
+
+![](./images/readibility_metrics.png)
+
+**Sentiments**
+
+- Bag of words on 10Ks might give insights from word compositions (lawsuits, risks, bankruptcy, losses indicate problems). It's simple and a good starting point. Remember BoW ignore order and meaning can be mixed! Also for a large document, too many bags can be created. We can also categorize our bags as positive or negative using wordlists. A sentiment score can be then computed based o the number of words that match each wordlist. Other categories may also exist. Researches compiled these wordlists for analysing documents, tailored wordlists might be needed.
+    - The [Harvard Wordlist](http://www.wjh.harvard.edu/~inquirer/spreadsheet_guide.htm): Created for general document processing. Includes categories such as "pleasure", "vice"...etc
+    - The [Loughran-McDonald Wordlist](https://sraf.nd.edu/textual-analysis/resources/): Created specifically for analyzing financial documents. Contains "positive", "negative", "litigious", "uncertain" categories.
+- Frequency reweighting is the idea of reshaping the importance of words based on their frequency on the document to reduce the impact of common words. For example, instead of having the frequency term as simply the frequency, we can do $tf(w,d) = 1 + log(f_{w,d}), f_{w,d} > 0$. We also need to normalize given that larger documents will have larger terms than smaller documents. We can divide each frequency by the average word frequency in a document. To account for multiple documents, we use the idf. This should be larger for more unique words. A simple formula is 1 + log of the inverse of the document frequency of that word times the number of documents. We finally have a collection of documents turned into a collection of numbers.
+
+![](./images/term_frequency.png)
+![](./images/inverse_df.png)
+
+There are several heuristic combinations of td-idf's we can use.
+
+![](./images/tf_idf_poss.png)
+
+**Similarity**
+
+How to compare two documents? We want to spot out changes in the market and company structure.
+Each document can be transformed into a vector using tf-idf and we can then take the cosine similarity to calculate a number expressing the similarity of the documents.
+
+![](./images/cosine_sim.png)
+
+Another metric computes the min and max collections of values and the more similar the two original vectors are, the closer the kin and max will be. That is the Jaccard similarity metric.
