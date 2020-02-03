@@ -1420,3 +1420,41 @@ Each document can be transformed into a vector using tf-idf and we can then take
 ![](./images/cosine_sim.png)
 
 Another metric computes the min and max collections of values and the more similar the two original vectors are, the closer the kin and max will be. That is the Jaccard similarity metric.
+
+### Recurrent Neural Networks
+
+RNNs are designed specifically to learn from sequences of data by passing the hidden state from one step in the sequence to the next step in the sequence, combined with the input. They have a hard time storing long term memory.
+
+Long short-term memory (LSTMs) are an improvement the RNNs, and are quite useful when our neural network needs to switch between remembering recent things, and things from long time ago. It keeps track of both long and short term memories and merges with the input to calculate the network.
+
+The LTM goes to the forget gate, where it forgets anything that it doesn't consider useful. The STM and the event go to the learn gate where unecessary info is also removed. The LTM that we have not forgotten yet plus the new info from the learn gate go into the remember gate which outputs an updated LTM. Those also go into the use gate and the output is both the prediction and new STM.
+
+![](./images/lstm_arch.png)
+![](./images/rnn_arch.png)
+![](./images/lstm_gates.png)
+
+In the learn gate some part of the incoming info is ignored thourgh the ignore factor (vector) i_t.
+
+![](./images/learn_gate.png)
+
+The forget gate uses another network that combines the STM and event to compute the forget factor (vector) to multiply the LTM.
+
+![](./images/forget_gate.png)
+
+The remember gate simply adds the outputs of the forget and learn gates.
+
+![](./images/remember_gate.png)
+
+The use gate applies two networks to the forget and learn gates applying different activation functions and multiplies both.
+
+![](./images/use_gate.png)
+
+This architecture works but others also do.
+
+![](./images/lstm_arch_2.png)
+
+Gater recurrent unit is another architecure that only generates one memory.
+
+Another variation is to allow the LTM have a say in the forget factor.
+![](./images/peephole_connections.png)
+
