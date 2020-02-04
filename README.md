@@ -1458,3 +1458,16 @@ Gater recurrent unit is another architecure that only generates one memory.
 Another variation is to allow the LTM have a say in the forget factor.
 ![](./images/peephole_connections.png)
 
+
+### Word embeddings & Word2Vec
+
+- Models that learn how to model words or phrases to numerical vectors or embeddings. This technique is used to reduce dimensionality of text data. These embeddings can also contain semantic meaning such as those derived from the Word2Vec model. For instance, relationship between verb tenses such as walking and walked as well as gendered words such as woman and queen.
+If we represent the data in lower dimensions, the help the neural network to learn about the data.
+
+I we were to use one-hot encoding simply, the input vector would be thousands of numbers long and the output of the network would be a very spare matrix. With a lot of null values, the computational efficiency is very low. To solve this, we use a fully connected linear layeror embedding layer and embedding weights. We grab only the row specific to that word since all the other indexes of the input are null. Each word is now not a vector but a single integer. This is called embedding lookup.
+
+![](./images/one-hot-encoding.png)
+![](./images/one-hot-encoding-2.png)
+![](./images/embedding-layer.png)
+![](./images/embedding-layer-2.png)
+![](./images/word-2-vec.png)
